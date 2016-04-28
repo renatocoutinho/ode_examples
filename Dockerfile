@@ -1,0 +1,18 @@
+FROM andrewosh/binder-base
+
+MAINTAINER Renato Coutinho <renato.coutinho@gmail.com>
+
+USER root
+
+# Add R dependencies
+RUN apt-get update
+RUN apt-get install -y  r-base r-base-dev && apt-get clean
+
+USER main
+
+# Install required packages
+RUN R -e 'install.packages(c("deSolve", "ggplot2", "reshape2", "rootSolve", "pse"))'
+# Install R Kernel
+RUN R -e "install.packages(c('rzmq','repr','IRkernel','IRdisplay'),
+    repos = c('http://irkernel.github.io/', getOption('repos')));
+    IRkernel::installspec()"
